@@ -1,6 +1,8 @@
 import {Component} from 'react';
+import PropTypes from 'prop-types';
+
 import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/errorMessage'
+import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
 import './charList.scss';
 
@@ -14,12 +16,11 @@ class CharList extends Component {
         offset: 210,
         charEnded: false
     }
-
-
+    
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.onRequest();
+        // this.onRequest();
     }
 
     onRequest = (offset) => {
@@ -29,7 +30,7 @@ class CharList extends Component {
             .catch(this.onError)
     }
 
-    onCharListLoading= () => {
+    onCharListLoading = () => {
         this.setState({
             newItemLoading: true
         })
@@ -37,10 +38,9 @@ class CharList extends Component {
 
     onCharListLoaded = (newCharList) => {
         let ended = false;
-        if(newCharList.length < 9) {
+        if (newCharList.length < 9) {
             ended = true;
         }
-
 
         this.setState(({offset, charList}) => ({
             charList: [...charList, ...newCharList],
@@ -58,7 +58,8 @@ class CharList extends Component {
         })
     }
 
-
+    // Этот метод создан для оптимизации, 
+    // чтобы не помещать такую конструкцию в метод render
     renderItems(arr) {
         const items =  arr.map((item) => {
             let imgStyle = {'objectFit' : 'cover'};
@@ -70,7 +71,7 @@ class CharList extends Component {
                 <li 
                     className="char__item"
                     key={item.id}
-                    onClick={() => {this.props.onCharSelected(item.id)}}>
+                    onClick={() => this.props.onCharSelected(item.id)}>
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                         <div className="char__name">{item.name}</div>
                 </li>
@@ -84,8 +85,8 @@ class CharList extends Component {
         )
     }
 
-
     render() {
+
         const {charList, loading, error, offset, newItemLoading, charEnded} = this.state;
         
         const items = this.renderItems(charList);
@@ -100,15 +101,19 @@ class CharList extends Component {
                 {spinner}
                 {content}
                 <button 
-                className="button button__main button__long"
-                disabled={newItemLoading} 
-                style={{'display' : charEnded ? 'none' : 'block'}}
-                onClick={() => this.onRequest(offset)}   >
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    style={{'display': charEnded ? 'none' : 'block'}}
+                    onClick={() => this.onRequest(offset)}>
                     <div className="inner">load more</div>
                 </button>
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
