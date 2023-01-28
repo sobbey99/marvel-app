@@ -1,0 +1,21 @@
+.single__char{
+    &-wrapper {
+        display: flex;
+        margin-top: 50px;
+    }
+    &-img {
+        width: 450px;
+        height: 450px;
+        img {
+            max-width: 100%;
+        }
+        margin-right: 50px;
+    }
+
+    &-title{
+        margin-bottom: 25px;
+    }
+    &-text {
+        font-size: 18px;
+    }
+}
